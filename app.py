@@ -75,12 +75,10 @@ try:
     worries = calculate_days_until_deadline(worries, day_zero)
     ambitions = calculate_days_until_deadline(ambitions, day_zero)
 
-    # Normalize days until deadline to determine marker size
+    # Normalize days until deadline to determine marker size (linearly increase size as deadline approaches)
     def normalize_sizes(days_until_deadline, min_size=5, max_size=20):
-        min_days = days_until_deadline.min()
-        max_days = days_until_deadline.max()
-        # Invert the normalization to make closer deadlines have larger sizes
-        normalized_sizes = max_size - (days_until_deadline - min_days) / (max_days - min_days) * (max_size - min_size)
+        # Calculate the marker size based on the inverse of days until the deadline
+        normalized_sizes = max_size - (days_until_deadline / days_until_deadline.max()) * (max_size - min_size)
         return normalized_sizes
 
     # Calculate marker sizes for worries and ambitions
