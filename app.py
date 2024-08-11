@@ -114,23 +114,28 @@ try:
         name='Ambitions'
     ))
 
-    # Update layout to reflect the 3D nature of the visualization
+    # Update layout to improve mobile view and adjust camera perspective
     fig.update_layout(
         title='3D Days Until Deadline - Impact/Benefit - Probability Matrix',
         scene=dict(
             xaxis=dict(title='Days Until Deadline', range=[days_until, 0]),  # Reverse the X-axis
             yaxis=dict(title='Impact/Benefit'),
             zaxis=dict(title='Probability'),
+            camera=dict(
+                eye=dict(x=2, y=2, z=2)  # Adjust the initial camera position to make the plot less zoomed-in
+            )
         ),
         width=1000,
         height=700,
-        margin=dict(l=50, r=150, t=50, b=50)
+        margin=dict(l=50, r=150, t=50, b=50),
+        autosize=True,  # Allow the plot to adjust its size based on the screen size
+        scene_dragmode='orbit',  # Enable 3D orbit interaction mode
     )
 
     print('3D figure layout updated.')
 
     # Display the 3D graph in Streamlit
-    st.plotly_chart(fig)
+    st.plotly_chart(fig, use_container_width=True)
     print('3D Plotly chart displayed in Streamlit.')
 
     print("This dashboard is automatically updated when your Google Sheet data changes.")
