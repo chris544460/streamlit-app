@@ -14,9 +14,9 @@ def load_data():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
     # Load credentials directly from Streamlit secrets or from a file
-    # creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
+    creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
     
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service_account"], scope)
+    # creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service_account"], scope)
     # print('Credentials loaded successfully.')
 
     # Authorize the client to interact with Google Sheets
@@ -40,7 +40,7 @@ print("Connecting to Google Sheets...")
 if st.button('Refresh Data'):
     # Clear the cached data
     st.cache_data.clear()
-    st.write("Data cache cleared. Reloading data...")
+    print("Data cache cleared. Reloading data...")
 
 try:
     print("Connecting to Google Sheets...")
@@ -48,12 +48,9 @@ try:
     # Load data from Google Sheets (cached)
     df = load_data()
 
-    print('Data fetched successfully from the worksheet and cached.')
-
     # Filter the data by 'Type'
     worries = df[df['Type'] == 'Worry']
     ambitions = df[df['Type'] == 'Ambition']
-    print('Data filtered by Type successfully.')
 
     # Allow the user to select the Day 0 date
     day_zero = st.date_input("Select Day 0 (Start Date)", datetime.now().date())
@@ -82,7 +79,7 @@ try:
     ambitions = calculate_days_until_deadline(ambitions, day_zero)
 
     # Less steep linear function for marker sizes based on days until the deadline
-    def linear_size(days_until_deadline, max_size=30, min_size=10, steepness=2):
+    def linear_size(days_until_deadline, max_size=30, min_size=10, steepness=2.5):
         # Adjusted linear function: size decreases less steeply with the number of days
         size = max_size - (days_until_deadline * steepness)
         return size.clip(lower=min_size)  # Ensure the size does not go below min_size
@@ -91,56 +88,58 @@ try:
     worries['Marker Size'] = linear_size(worries['Days Until Deadline'])
     ambitions['Marker Size'] = linear_size(ambitions['Days Until Deadline'])
 
-    # Create the 3D Plotly figure
-    fig = make_subplots(specs=[[{'type': 'scatter3d'}]])
+    # Check if worries or ambitions have valid data before plotting
+    if not worries.empty or not ambitions.empty:
+        # Create the 3D Plotly figure
+        fig = make_subplots(specs=[[{'type': 'scatter3d'}]])
 
-    print("Adding 3D scatter plots...")
+        # Add worries as scatter points in 3D
+        if not worries.empty:
+            fig.add_trace(go.Scatter3d(
+                x=worries['Days Until Deadline'],
+                y=worries['Impact/Benefit Value'],
+                z=worries['Prob. Value'],
+                mode='markers+text',
+                text=worries['Description'],
+                marker=dict(color='darkred', size=worries['Marker Size']),
+                name='Worries'
+            ))
 
-    # Add worries as scatter points in 3D
-    fig.add_trace(go.Scatter3d(
-        x=worries['Days Until Deadline'],
-        y=worries['Impact/Benefit Value'],
-        z=worries['Prob. Value'],
-        mode='markers+text',
-        text=worries['Description'],
-        marker=dict(color='darkred', size=worries['Marker Size']),
-        name='Worries'
-    ))
+        # Add ambitions as scatter points in 3D
+        if not ambitions.empty:
+            fig.add_trace(go.Scatter3d(
+                x=ambitions['Days Until Deadline'],
+                y=ambitions['Impact/Benefit Value'],
+                z=ambitions['Prob. Value'],
+                mode='markers+text',
+                text=ambitions['Description'],
+                marker=dict(color='darkgreen', size=ambitions['Marker Size']),
+                name='Ambitions'
+            ))
 
-    # Add ambitions as scatter points in 3D
-    fig.add_trace(go.Scatter3d(
-        x=ambitions['Days Until Deadline'],
-        y=ambitions['Impact/Benefit Value'],
-        z=ambitions['Prob. Value'],
-        mode='markers+text',
-        text=ambitions['Description'],
-        marker=dict(color='darkgreen', size=ambitions['Marker Size']),
-        name='Ambitions'
-    ))
+        # Update layout to improve mobile view and adjust camera perspective
+        fig.update_layout(
+            title='3D Days Until Deadline - Impact/Benefit - Probability Matrix',
+            scene=dict(
+                xaxis=dict(title='Days Until Deadline', range=[days_until, 0]),  # Reverse the X-axis
+                yaxis=dict(title='Impact/Benefit'),
+                zaxis=dict(title='Probability'),
+                camera=dict(
+                    eye=dict(x=2, y=2, z=2)  # Adjust the initial camera position to make the plot less zoomed-in
+                )
+            ),
+            width=1000,
+            height=700,
+            margin=dict(l=50, r=150, t=50, b=50),
+            autosize=True,  # Allow the plot to adjust its size based on the screen size
+            scene_dragmode='orbit',  # Enable 3D orbit interaction mode
+        )
 
-    # Update layout to improve mobile view and adjust camera perspective
-    fig.update_layout(
-        title='3D Days Until Deadline - Impact/Benefit - Probability Matrix',
-        scene=dict(
-            xaxis=dict(title='Days Until Deadline', range=[days_until, 0]),  # Reverse the X-axis
-            yaxis=dict(title='Impact/Benefit'),
-            zaxis=dict(title='Probability'),
-            camera=dict(
-                eye=dict(x=2, y=2, z=2)  # Adjust the initial camera position to make the plot less zoomed-in
-            )
-        ),
-        width=1000,
-        height=700,
-        margin=dict(l=50, r=150, t=50, b=50),
-        autosize=True,  # Allow the plot to adjust its size based on the screen size
-        scene_dragmode='orbit',  # Enable 3D orbit interaction mode
-    )
+        # Display the 3D graph in Streamlit
+        st.plotly_chart(fig, use_container_width=True)
 
-    print('3D figure layout updated.')
-
-    # Display the 3D graph in Streamlit
-    st.plotly_chart(fig, use_container_width=True)
-    print('3D Plotly chart displayed in Streamlit.')
+    else:
+        print("No valid data to display.")
 
     print("This dashboard is automatically updated when your Google Sheet data changes.")
 
