@@ -1,7 +1,6 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import streamlit as st
-import json
 
 st.write("Connecting to Google Sheets...")
 
@@ -9,9 +8,8 @@ try:
     # Define the scope for accessing Google Sheets and Google Drive
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-    # Load credentials from Streamlit secrets
-    creds_dict = json.loads(st.secrets["gcp_service_account"])
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+    # Load credentials directly from Streamlit secrets
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service_account"], scope)
     st.write('Credentials loaded successfully.')
 
     # Authorize the client to interact with Google Sheets
