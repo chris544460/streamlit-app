@@ -36,6 +36,12 @@ def load_data():
 # Display a message to indicate the app is running
 print("Connecting to Google Sheets...")
 
+# Add a button to refresh the data
+if st.button('Refresh Data'):
+    # Clear the cached data
+    st.cache_data.clear()
+    st.write("Data cache cleared. Reloading data...")
+
 try:
     print("Connecting to Google Sheets...")
 
