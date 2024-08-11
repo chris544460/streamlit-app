@@ -1,0 +1,36 @@
+2024-08-11 01:19:17,813 - INFO - Credentials loaded successfully.
+2024-08-11 01:19:17,814 - INFO - Authorized the Google Sheets client.
+2024-08-11 01:19:17,884 - INFO - Credentials loaded successfully.
+2024-08-11 01:19:17,884 - INFO - Authorized the Google Sheets client.
+2024-08-11 01:19:18,785 - INFO - Google Sheet opened successfully.
+2024-08-11 01:19:18,785 - INFO - Google Sheet opened successfully.
+2024-08-11 01:19:18,887 - INFO - Worksheet selected successfully.
+2024-08-11 01:19:18,888 - INFO - Worksheet selected successfully.
+2024-08-11 01:19:19,004 - INFO - Data fetched successfully from the worksheet.
+2024-08-11 01:19:19,014 - INFO - Data fetched successfully from the worksheet.
+2024-08-11 01:19:19,015 - INFO - Data converted to DataFrame successfully.
+2024-08-11 01:19:19,015 - INFO - Data converted to DataFrame successfully.
+2024-08-11 01:19:19,019 - INFO - Data filtered by Type successfully.
+2024-08-11 01:19:19,019 - INFO - Data filtered by Type successfully.
+2024-08-11 01:19:19,087 - INFO - Applied alternating offset to avoid label overlap.
+2024-08-11 01:19:19,089 - INFO - Applied alternating offset to avoid label overlap.
+2024-08-11 01:19:19,093 - INFO - Added scatter points for worries and ambitions.
+2024-08-11 01:19:19,094 - INFO - Added scatter points for worries and ambitions.
+2024-08-11 01:19:19,107 - INFO - Figure layout updated.
+2024-08-11 01:19:19,109 - INFO - Figure layout updated.
+2024-08-11 01:19:19,111 - INFO - Plotly chart displayed in Streamlit.
+2024-08-11 01:19:19,112 - INFO - Streamlit write command executed.
+2024-08-11 01:19:19,242 - INFO - Plotly chart displayed in Streamlit.
+2024-08-11 01:19:19,242 - INFO - Streamlit write command executed.
+2024-08-11 01:19:34,922 - INFO - Credentials loaded successfully.
+2024-08-11 01:19:34,923 - INFO - Authorized the Google Sheets client.
+2024-08-11 01:19:36,053 - INFO - Google Sheet opened successfully.
+2024-08-11 01:19:36,145 - INFO - Worksheet selected successfully.
+2024-08-11 01:19:36,288 - INFO - Data fetched successfully from the worksheet.
+2024-08-11 01:19:36,290 - INFO - Data converted to DataFrame successfully.
+2024-08-11 01:19:36,291 - INFO - Data filtered by Type successfully.
+2024-08-11 01:19:36,303 - INFO - Applied alternating offset to avoid label overlap.
+2024-08-11 01:19:36,304 - INFO - Added scatter points for worries and ambitions.
+2024-08-11 01:19:36,309 - INFO - Figure layout updated.
+2024-08-11 01:19:36,310 - INFO - Plotly chart displayed in Streamlit.
+2024-08-11 01:19:36,311 - INFO - Streamlit write command executed.
