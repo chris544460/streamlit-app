@@ -81,15 +81,15 @@ try:
     worries = calculate_days_until_deadline(worries, day_zero)
     ambitions = calculate_days_until_deadline(ambitions, day_zero)
 
-    # Normalize days until deadline to determine marker size (linearly increase size as deadline approaches)
-    def normalize_sizes(days_until_deadline, min_size=5, max_size=20):
-        # Calculate the marker size based on the inverse of days until the deadline
-        normalized_sizes = max_size - (days_until_deadline / days_until_deadline.max()) * (max_size - min_size)
-        return normalized_sizes
+    # Fixed linear function for marker sizes based on days until the deadline
+    def linear_size(days_until_deadline, max_size=30, min_size=5):
+        # Linear function: size decreases linearly with the number of days
+        size = max_size - (days_until_deadline * (max_size - min_size) / days_until)
+        return size.clip(lower=min_size)  # Ensure the size does not go below min_size
 
     # Calculate marker sizes for worries and ambitions
-    worries['Marker Size'] = normalize_sizes(worries['Days Until Deadline'])
-    ambitions['Marker Size'] = normalize_sizes(ambitions['Days Until Deadline'])
+    worries['Marker Size'] = linear_size(worries['Days Until Deadline'])
+    ambitions['Marker Size'] = linear_size(ambitions['Days Until Deadline'])
 
     # Create the 3D Plotly figure
     fig = make_subplots(specs=[[{'type': 'scatter3d'}]])
