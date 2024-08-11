@@ -14,9 +14,9 @@ def load_data():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
     # Load credentials directly from Streamlit secrets or from a file
-    creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
+    # creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
     
-    # creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service_account"], scope)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service_account"], scope)
     # print('Credentials loaded successfully.')
 
     # Authorize the client to interact with Google Sheets
