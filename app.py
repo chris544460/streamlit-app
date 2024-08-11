@@ -17,37 +17,37 @@ try:
 
     # # Provide the path to the downloaded JSON credentials file
     # creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
-    # logging.info('Credentials loaded successfully.')
+    # print('Credentials loaded successfully.')
 
     # Load credentials from Streamlit secrets
     creds_dict = json.loads(st.secrets["gcp_service_account"])
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-    logging.info('Credentials loaded successfully.')
+    print('Credentials loaded successfully.')
 
     # Authorize the client to interact with Google Sheets
     client = gspread.authorize(creds)
-    logging.info('Authorized the Google Sheets client.')
+    print('Authorized the Google Sheets client.')
 
     # Open the Google Sheet by its name
     sheet = client.open('Worries')
-    logging.info('Google Sheet opened successfully.')
+    print('Google Sheet opened successfully.')
 
     # Select the first worksheet
     worksheet = sheet.get_worksheet(0)  # Index 0 is the first sheet
-    logging.info('Worksheet selected successfully.')
+    print('Worksheet selected successfully.')
 
     # Fetch all data from the sheet
     data = worksheet.get_all_records()
-    logging.info('Data fetched successfully from the worksheet.')
+    print('Data fetched successfully from the worksheet.')
 
     # Convert the data to a DataFrame
     df = pd.DataFrame(data)
-    logging.info('Data converted to DataFrame successfully.')
+    print('Data converted to DataFrame successfully.')
 
     # Filter the data by 'Type'
     worries = df[df['Type'] == 'Worry']
     ambitions = df[df['Type'] == 'Ambition']
-    logging.info('Data filtered by Type successfully.')
+    print('Data filtered by Type successfully.')
 
     # Define the quadrants
     mid_prob = 3
@@ -81,7 +81,7 @@ try:
     # Apply alternating offset to worries and ambitions
     worries = apply_alternating_offset(worries)
     ambitions = apply_alternating_offset(ambitions)
-    logging.info('Applied alternating offset to avoid label overlap.')
+    print('Applied alternating offset to avoid label overlap.')
 
     # Add worries as scatter points with dynamic text positioning
     fig.add_trace(go.Scatter(
@@ -104,7 +104,7 @@ try:
         marker=dict(color='darkgreen', size=10),
         name='Ambitions'
     ))
-    logging.info('Added scatter points for worries and ambitions.')
+    print('Added scatter points for worries and ambitions.')
 
     # Update layout to add more padding and avoid cutting off text
     fig.update_layout(
@@ -117,14 +117,14 @@ try:
         height=700,  # Increase the figure height
         margin=dict(l=50, r=150, t=50, b=50)  # Add more padding on the left and right
     )
-    logging.info('Figure layout updated.')
+    print('Figure layout updated.')
 
     # Display the graph in Streamlit
     st.plotly_chart(fig)
-    logging.info('Plotly chart displayed in Streamlit.')
+    print('Plotly chart displayed in Streamlit.')
 
     st.write("This dashboard is automatically updated when your Google Sheet data changes.")
-    logging.info('Streamlit write command executed.')
+    print('Streamlit write command executed.')
 
 except Exception as e:
     logging.error(f'An error occurred: {e}')
