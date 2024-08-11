@@ -5,6 +5,7 @@ import logging
 import plotly.graph_objs as go
 from plotly.subplots import make_subplots
 import streamlit as st
+import json
 
 # Set up logging
 logging.basicConfig(filename='app.log', level=logging.INFO,
@@ -14,8 +15,13 @@ try:
     # Define the scope for accessing Google Sheets and Google Drive
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-    # Provide the path to the downloaded JSON credentials file
-    creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
+    # # Provide the path to the downloaded JSON credentials file
+    # creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
+    # logging.info('Credentials loaded successfully.')
+
+    # Load credentials from Streamlit secrets
+    creds_dict = json.loads(st.secrets["gcp_service_account"])
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     logging.info('Credentials loaded successfully.')
 
     # Authorize the client to interact with Google Sheets
