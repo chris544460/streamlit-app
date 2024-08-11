@@ -81,10 +81,10 @@ try:
     worries = calculate_days_until_deadline(worries, day_zero)
     ambitions = calculate_days_until_deadline(ambitions, day_zero)
 
-    # Fixed linear function for marker sizes based on days until the deadline
-    def linear_size(days_until_deadline, max_size=30, min_size=5):
-        # Linear function: size decreases linearly with the number of days
-        size = max_size - (days_until_deadline * (max_size - min_size) / days_until)
+    # Less steep linear function for marker sizes based on days until the deadline
+    def linear_size(days_until_deadline, max_size=30, min_size=10, steepness=0.2):
+        # Adjusted linear function: size decreases less steeply with the number of days
+        size = max_size - (days_until_deadline * steepness)
         return size.clip(lower=min_size)  # Ensure the size does not go below min_size
 
     # Calculate marker sizes for worries and ambitions
