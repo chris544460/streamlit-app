@@ -14,9 +14,9 @@ def load_data():
     scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
     # Load credentials directly from Streamlit secrets or from a file
-    # creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
+    creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
     
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service_account"], scope)
+    # creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service_account"], scope)
     # print('Credentials loaded successfully.')
 
     # Authorize the client to interact with Google Sheets
@@ -70,7 +70,7 @@ try:
             st.error("Some dates in 'Deadline Date' could not be parsed. Please check the format in your Google Sheet.")
         
         # Calculate days remaining until the deadline based on user-specified day_zero
-        df['Days Until Deadline'] = (df['Deadline Date'] - day_zero).apply(lambda x: max(int(x.days), 0) if pd.notnull(x) else None)
+        df['Days Until Deadline'] = (df['Deadline Date'] - day_zero).apply(lambda x: int(x.days) if pd.notnull(x) else None)
         
         return df
 
@@ -79,8 +79,9 @@ try:
     ambitions = calculate_days_until_deadline(ambitions, day_zero)
 
     # Filter out rows where 'Days Until Deadline' is negative
-    worries = worries[worries['Days Until Deadline'] > 0]
-    ambitions = ambitions[ambitions['Days Until Deadline'] > 0]
+    worries = worries[worries['Days Until Deadline'] >= 0]
+    ambitions = ambitions[ambitions['Days Until Deadline'] >= 0]
+
 
     # Less steep linear function for marker sizes based on days until the deadline
     def linear_size(days_until_deadline, max_size=30, min_size=10, steepness=2.5):
