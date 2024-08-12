@@ -79,8 +79,8 @@ try:
     ambitions = calculate_days_until_deadline(ambitions, day_zero)
 
     # Filter out rows where 'Days Until Deadline' is negative
-    worries = worries[worries['Days Until Deadline'] >= 0]
-    ambitions = ambitions[ambitions['Days Until Deadline'] >= 0]
+    worries = worries[worries['Days Until Deadline'] > 0]
+    ambitions = ambitions[ambitions['Days Until Deadline'] > 0]
 
     # Less steep linear function for marker sizes based on days until the deadline
     def linear_size(days_until_deadline, max_size=30, min_size=10, steepness=2.5):
